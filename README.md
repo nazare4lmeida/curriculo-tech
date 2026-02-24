@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+# Currículo Tech
 
-## Project info
+Plataforma unificada para criação, gestão e exportação de currículos otimizados para o mercado de tecnologia. O sistema integra um gerador de documentos com preview em tempo real e uma ferramenta de avaliação técnica para diagnóstico de carreira.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 💻 Visão Geral do Sistema
 
-There are several ways of editing your application.
+### 1. Engine de Geração de Currículo (`/curriculo`)
 
-**Use Lovable**
+Módulo principal focado na persistência e formatação de dados profissionais.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+* **Campos Estruturados:** Coleta de dados sobre Stack Tecnológica, Nível de Inglês, Projetos, Repositórios e Certificações.
+* **Sincronização Visual:** Renderização dinâmica (*Real-time Preview*) via State Management.
+* **Templates Disponíveis:**
+    * `Minimal Tech`: Design focado em legibilidade para sistemas de triagem (ATS).
+    * `Dev Modern`: Ênfase em hierarquia visual e competências.
+    * `Dark Professional`: Estética moderna baseada no Design System da plataforma.
+* **Exportação:** Engine de processamento de PDF via `html2pdf.js`.
 
-Changes made via Lovable will be committed automatically to this repo.
+### 2. Módulo de Avaliação Técnica (`/teste`)
 
-**Use your preferred IDE**
+Ferramenta de diagnóstico para aferição de hard skills.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* **Algoritmo de Classificação:** Sistema de pontuação que define níveis do Iniciante ao Avançado.
+* **Relatório de Performance:** Geração de feedbacks dinâmicos e sugestões de trilhas de aprendizado baseadas nos resultados.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Stack Tecnológica
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+| Componente | Tecnologia |
+| :--- | :--- |
+| **Frontend** | React.js + Vite |
+| **Linguagem** | TypeScript |
+| **Estilização** | Tailwind CSS + shadcn/ui |
+| **Backend / BaaS** | Supabase (PostgreSQL) |
+| **Segurança** | Row Level Security (RLS) |
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Arquitetura de Dados (PostgreSQL)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+```sql
+-- Principais tabelas do ecossistema
+Table profiles {
+  id uuid [primary key]
+  email varchar
+  created_at timestamp
+}
 
-**Edit a file directly in GitHub**
+Table resumes {
+  id uuid [primary key]
+  user_id uuid [ref: > profiles.id]
+  content jsonb
+  template_style string
+}
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Table quiz_results {
+  id uuid [primary key]
+  user_id uuid [ref: > profiles.id]
+  score integer
+  level string
+}
 
-**Use GitHub Codespaces**
+⚙️ Configuração do Ambiente Local
+Para replicar o projeto localmente, execute os seguintes comandos no seu terminal:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Instalação
 
-## What technologies are used for this project?
+# Clonar o repositório
+git clone <URL_DO_SEU_REPOSITORIO>
 
-This project is built with:
+# Acessar diretório
+cd curriculo-tech
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Instalar dependências
+npm install
 
-## How can I deploy this project?
+2. Variáveis de Ambiente
+Crie um arquivo .env na raiz do projeto:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+VITE_SUPABASE_URL=seu_endpoint_supabase
+VITE_SUPABASE_ANON_KEY=sua_chave_publica
 
-## Can I connect a custom domain to my Lovable project?
+3. Deploy (Vercel)
 
-Yes, you can!
+O projeto está pronto para integração contínua com a Vercel. Ao conectar seu repositório, certifique-se de configurar as mesmas variáveis de ambiente acima nas Project Settings.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Autora
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Nazaré Almeida Desenvolvedora de Sistemas | 
