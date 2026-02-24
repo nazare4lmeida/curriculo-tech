@@ -62,12 +62,14 @@ Table quiz_results {
   score integer
   level string
 }
+```
 
 ⚙️ Configuração do Ambiente Local
 Para replicar o projeto localmente, execute os seguintes comandos no seu terminal:
 
 1. Instalação
 
+``` bash
 # Clonar o repositório
 git clone <URL_DO_SEU_REPOSITORIO>
 
@@ -83,10 +85,12 @@ Crie um arquivo .env na raiz do projeto:
 VITE_SUPABASE_URL=seu_endpoint_supabase
 VITE_SUPABASE_ANON_KEY=sua_chave_publica
 
+```
+
 3. Deploy (Vercel)
 
 O projeto está pronto para integração contínua com a Vercel. Ao conectar seu repositório, certifique-se de configurar as mesmas variáveis de ambiente acima nas Project Settings.
 
-Autora
+# Autora
 
 Nazaré Almeida Desenvolvedora de Sistemas | 
