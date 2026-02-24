@@ -8,9 +8,10 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import ResumeEditor from "./pages/ResumeEditor";
-import Quiz from "./pages/Quiz";
+import Quiz from "./data/quizApp";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import QuizApp from "./data/quizApp";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +27,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/curriculo" element={<ResumeEditor />} />
-            <Route path="/teste" element={<Quiz />} />
+            <Route path="/teste" element={<QuizApp />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
