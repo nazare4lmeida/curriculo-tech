@@ -8,6 +8,13 @@ import ResumePreview from "@/components/resume/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Download, Save, FileText } from "lucide-react";
+type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 const templateLabels: Record<TemplateType, string> = {
   minimal: "Minimal Tech",
@@ -27,35 +34,59 @@ const ResumeEditor = () => {
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
-    html2pdf()
-      .set({
-        margin: 0,
-        filename: `curriculo-${data.fullName || "geracaotech"}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(element)
-      .save();
+    
+    const options = {
+      margin: 0,
+      filename: `curriculo-${data.fullName || "geracaotech"}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        width: 794, // A largura A4 (210mm) em pixels deve ser AQUI
+        letterRendering: true
+      },
+      jsPDF: { 
+        unit: "mm", 
+        format: "a4", 
+        orientation: "portrait" 
+      },
+    };
+
+    html2pdf().set(options).from(element).save();
   };
 
   const handleSave = async () => {
     if (!user) {
-      toast({ title: "Faça login", description: "Entre na sua conta para salvar o currículo.", variant: "destructive" });
+      toast({
+        title: "Faça login",
+        description: "Entre na sua conta para salvar o currículo.",
+        variant: "destructive",
+      });
       return;
     }
     setSaving(true);
     try {
       const { error } = await supabase.from("resumes").insert({
         user_id: user.id,
-        title: data.fullName ? `Currículo de ${data.fullName}` : "Meu Currículo",
+        title: data.fullName
+          ? `Currículo de ${data.fullName}`
+          : "Meu Currículo",
         template,
-        data: data as any,
+        data: data as unknown as Json,
       });
       if (error) throw error;
-      toast({ title: "Salvo!", description: "Seu currículo foi salvo com sucesso." });
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+      toast({
+        title: "Salvo!",
+        description: "Seu currículo foi salvo com sucesso.",
+      });
+    } catch (e) {
+      const error = e as Error;
+      toast({
+        title: "Erro",
+        description: error.message || "Ocorreu um erro inesperado",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }
@@ -70,7 +101,9 @@ const ResumeEditor = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold">Editor de Currículo</h1>
-              <p className="text-sm text-muted-foreground">Preencha seus dados e veja o preview em tempo real</p>
+              <p className="text-sm text-muted-foreground">
+                Preencha seus dados e veja o preview em tempo real
+              </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               {/* Template selector */}
@@ -80,17 +113,29 @@ const ResumeEditor = () => {
                     key={t}
                     onClick={() => setTemplate(t)}
                     className={`px-3 py-1.5 text-xs rounded-md transition-all ${
-                      template === t ? "gradient-primary font-medium" : "text-muted-foreground hover:text-foreground"
+                      template === t
+                        ? "gradient-primary font-medium"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {templateLabels[t]}
                   </button>
                 ))}
               </div>
-              <Button variant="outline" size="sm" onClick={handleSave} disabled={saving}>
-                <Save className="h-4 w-4 mr-1" /> {saving ? "Salvando..." : "Salvar"}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSave}
+                disabled={saving}
+              >
+                <Save className="h-4 w-4 mr-1" />{" "}
+                {saving ? "Salvando..." : "Salvar"}
               </Button>
-              <Button size="sm" className="gradient-primary border-0" onClick={handleDownloadPDF}>
+              <Button
+                size="sm"
+                className="gradient-primary border-0"
+                onClick={handleDownloadPDF}
+              >
                 <Download className="h-4 w-4 mr-1" /> Baixar PDF
               </Button>
             </div>
@@ -104,7 +149,9 @@ const ResumeEditor = () => {
             <div className="rounded-2xl border border-border gradient-card overflow-hidden">
               <div className="p-4 border-b border-border flex items-center gap-2">
                 <FileText className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">Preview — {templateLabels[template]}</span>
+                <span className="text-sm font-medium">
+                  Preview — {templateLabels[template]}
+                </span>
               </div>
               <ResumePreview data={data} template={template} />
             </div>

@@ -18,8 +18,16 @@ const ResumePreview = ({ data, template }: Props) => {
   const Template = templates[template];
 
   return (
-    <div className="overflow-auto max-h-[calc(100vh-12rem)] bg-muted/20 rounded-lg">
-      <div className="transform scale-[0.6] origin-top-left w-[210mm]" id="resume-preview">
+    <div className="overflow-auto max-h-[calc(100vh-12rem)] bg-muted/20 rounded-lg p-4 flex justify-center">
+      {/* ALTERAÇÃO: 
+          1. Removido o 'transform scale-[0.6]' e 'origin-top-left' para não bugar o PDF.
+          2. Adicionado 'bg-white', 'shadow-2xl' e 'text-left' para garantir o visual de papel.
+          3. Mantido o ID 'resume-preview' e a largura 'w-[210mm]' para o html2pdf.
+      */}
+      <div 
+        id="resume-preview" 
+        className="w-[210mm] min-h-[297mm] bg-white text-black shadow-2xl mx-auto text-left"
+      >
         <Template data={data} />
       </div>
     </div>
